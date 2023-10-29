@@ -1,0 +1,128 @@
+﻿@model u18347852_HW03.Models.bookstudentVM
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .table:hover {
+        cursor: pointer;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.6/css/jquery.dataTables.min.css">
+
+<div>
+    <img src="~/images/Home.png" style="width: 1280px; height: 400px" ;>
+
+    
+</div>
+
+
+<div class="row">
+    <div class="col-6">
+        <!-- Students Table -->
+        <p>
+            <a href="#" class="create-link" data-url="@Url.Action("Create", "students")">Create a Student</a>
+        </p>
+        <table class="table table-striped table-hover table-primary">
+            <thead>
+                <tr class="table-dark">
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Birthdate</th>
+                    <th>Gender</th>
+                    <th>Class</th>
+                    <th>Point</th>
+                </tr>
+            </thead>
+            <tbody id="StudentTable">
+                @foreach (var item in Model.students)
+                {
+                    <tr>
+                        <td>@item.studentId</td>
+                        <td>@item.name</td>
+                        <td>@item.surname</td>
+                        <td>@item.birthdate</td>
+                        <td>@item.gender</td>
+                        <td>@(item.@class)</td>
+                        <td>@item.point</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="col-md-12 text-center">
+            <div class="pagination" id="studentPagination">
+                <button class="btn btn-secondary" id="prevStudentPage">Previous</button>
+                <span id="studentPageInfo">Page <span id="currentStudentPage">1</span> of <span id="totalStudentPages">1</span></span>
+                <button class="btn btn-primary" id="nextStudentPage">Next</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <!-- Books Table -->
+        <p>
+            <a href="#" class="create-book-link" data-url="@Url.Action("Create", "books")">Create a Book</a>
+        </p>
+        <table class="table table-striped table-hover table-primary">
+            <thead>
+                <tr class="table-dark">
+                    <th>Book ID</th>
+                    <th>Name</th>
+                    <th>Page Count</th>
+                    <th>Point</th>
+                    <th>Author ID</th>
+                    <th>Type ID</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="BookTable">
+                @foreach (var item in Model.books)
+                {
+                    string status = "Available";
+                    var borrow = item.borrows.OrderByDescending(b => b.takenDate).FirstOrDefault();
+                    if (borrow != null && borrow.broughtDate == null)
+                    {
+                        status = "Out";
+                    }
+                    <tr>
+                        <td>@item.bookId</td>
+                        <td>@item.name</td>
+                        <td>@item.pagecount</td>
+                        <td>@item.point</td>
+                        <td>@item.authorId</td>
+                        <td>@item.typeId</td>
+                        <td>@status</td>
+                    </tr>
+                }
+            </tbody>
+
+
+        </table>
+        <div class="pagination" id="bookPagination">
+            <button class="btn btn-secondary" id="prevBookPage">Previous</button>
+            <span id="bookPageInfo">Page <span id="currentBookPage">1</span> of <span id="totalBookPages">1</span></span>
+            <button class="btn btn-primary" id="nextBookPage">Next</button>
+        </div>
+    </div>
+</div>
+
+<!------------------------------MODAL------------------------>
+<div id="myModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">My Library</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-content">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/Scripts/MyScript.js"></script>
